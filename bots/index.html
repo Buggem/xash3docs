@@ -1,0 +1,46 @@
+<!doctype HTML>
+<html>
+  <head>
+    <title>Xash3Docs - Bots</title>
+    <link rel=stylesheet type=text/css href="https://leonill007.github.io/vgui.css/styles/greensteam/greensteam.css">
+  </head>
+  <body>
+		<nav>
+			<li><a href="./">Home</a></li>
+			<li><a href="https://xash.su">FWGS Website</a></li>
+			<li><a>Sections ▾</a>
+				<ul class="dropdown">
+					<li><a>Xash3D FWGS</a></li>
+					<li><a>Half-Life</a></li>
+					<li><a>Counter-Strike</a></li>
+					<li><a>TFC</a></li>
+					<li><a href="./bots">Bots</a></li>
+				</ul>
+			</li>
+		</nav>
+
+		<div class="window" name="Bots">
+			<h1>Bots in Xash3D (New Engine)</h1>
+      <div class="window" name="WARNING">This guide is intended for Linux, as Windows is very bad for dedicated server hosting and compiling</div>
+			<p>This is a tutorial on how to enable Half-Life: Deathmatch bots (specifically <i>Bot No. 10 by botman</i>) <b><i>without</i></b> Metamod or any external plugin software.</p>
+      <p><i style="color: grey !important; font-size: 10pt">
+        <!-- we will implement a class for these "tested on" blurbs. god these HTML comments are ugly aren't they. -->
+        Tested on AlmaLinux 9.6 on a Raspberry Pi 5 16GB model.
+      </i></p>
+      <h2>Compiling</h2>
+      <p>
+        <!-- stupid comments, but at least this guide is not using fucking AI slop and emojis -->
+        The first step is compiling the specific <code>hlsdk-portable</code> branch <code>bot10</code>.
+      </p>
+      <p>
+        You can download this branch of the repository to your system with these commands:
+        <pre style="padding: 20px;"><code>
+          git clone --recursive https://github.com/FWGS/hlsdk-portable
+          cd hlsdk-portable
+          git checkout bot10
+        </code></pre>
+      </p>
+      
+		</div>
+  </body>
+</html>
