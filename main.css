@@ -1,0 +1,21 @@
+/*
+ * main css file for xash3docs
+ * see https://unlicense.org for licensing information
+ */
+
+
+.codeblock {
+  display: block;
+  background: #3e4637;
+  padding: 10px;
+  border-radius: 10px;
+  text-wrap: nowrap;
+  overflow: scroll;
+}
+
+
+/* class for blurbs and tested on things */
+.testedon {
+  color: grey !important;
+  font-size: 10pt;
+}
