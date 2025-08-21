@@ -3,30 +3,45 @@
   <head>
     <title>Xash3Docs - Bots</title>
     <link rel=stylesheet type=text/css href="https://leonill007.github.io/vgui.css/styles/greensteam/greensteam.css">
+    <link rel=stylesheet type=text/css href="../main.css">
+    <script>
+    window.b64secret = function() {
+      javascript:document.getElementById('b64secret').style.display = (
+                (document.getElementById('b64secret').style.display == 'none') ? 'inline' : 'none'
+      );
+    }
+    </script>
   </head>
   <body>
-		<nav>
-			<li><a href="./">Home</a></li>
-			<li><a href="https://xash.su">FWGS Website</a></li>
-			<li><a>Sections ▾</a>
-				<ul class="dropdown">
-					<li><a>Xash3D FWGS</a></li>
-					<li><a>Half-Life</a></li>
-					<li><a>Counter-Strike</a></li>
-					<li><a>TFC</a></li>
-					<li><a href="./bots">Bots</a></li>
-				</ul>
-			</li>
-		</nav>
+    <nav>
+      <li><a href="./">Home</a></li>
+      <li><a href="https://xash.su">FWGS Website</a></li>
+      <li><a>Sections ▾</a>
+        <ul class="dropdown">
+          <li><a>Xash3D FWGS</a></li>
+          <li><a>Half-Life</a></li>
+          <li><a>Counter-Strike</a></li>
+          <li><a>TFC</a></li>
+          <li><a href=".">Bots</a></li>
+        </ul>
+      </li>
+    </nav>
 
-		<div class="window" name="Bots">
-			<h1>Bots in Xash3D (New Engine)</h1>
-      <div class="window" name="WARNING">This guide is intended for Linux, as Windows is very bad for dedicated server hosting and compiling</div>
-			<p>This is a tutorial on how to enable Half-Life: Deathmatch bots (specifically <i>Bot No. 10 by botman</i>) <b><i>without</i></b> Metamod or any external plugin software.</p>
-      <p><i style="color: grey !important; font-size: 10pt">
+    <div class="window" name="Bots">
+      <h1>Bots in Xash3D (New Engine)</h1>
+      <div class="window" name="WARNING">
+        <p>
+          This guide is intended for Linux, as Windows is
+          very bad at dedicated server hosting and compiling
+          binaries.
+        </p>
+      </div>
+        <p>This is a tutorial on how to enable Half-Life: Deathmatch bots (specifically <i>Bot No. 10 by botman</i>) <b><i>without</i></b> Metamod or any external plugin software.</p>
+      <p><i class="testedon">
         <!-- we will implement a class for these "tested on" blurbs. god these HTML comments are ugly aren't they. -->
         Tested on AlmaLinux 9.6 on a Raspberry Pi 5 16GB model.
       </i></p>
+      <!-- ANOTHER HEADER!!! RIGHT HERE RIGHT HERE!!!! LOOOK AT MEEEEE!!!! HERE! HERE!-->
       <h2>Compiling</h2>
       <p>
         <!-- stupid comments, but at least this guide is not using fucking AI slop and emojis -->
@@ -34,13 +49,138 @@
       </p>
       <p>
         You can download this branch of the repository to your system with these commands:
-        <pre style="padding: 20px;"><code>
-          git clone --recursive https://github.com/FWGS/hlsdk-portable
-          cd hlsdk-portable
-          git checkout bot10
-        </code></pre>
       </p>
-      
-		</div>
+      <p>
+        <code class="codeblock">
+          $ git clone --recursive https://github.com/FWGS/hlsdk-portable<br>
+          $ cd hlsdk-portable<br>
+          $ git checkout bot10
+        </code>
+      </p>
+      <p>
+        <!-- I loath this onclick hack but it'll hold up... for now -->
+        Then build the binaries (remember to append <code><a href="javascript:b64secret()">-D64BIT=ON</a></code> to CMake config flags for 64-bit) with:
+      </p>
+      <p>
+        <code class="codeblock">
+          $ cmake -DCMAKE_BUILD_TYPE=Release <span id="b64secret" style="display: none;">-D64BIT=ON</span> -B build -S .<br>
+          $ cmake --build build<br>
+        </code>
+      </p>
+      <div class="window" name="WARNING">
+        <p>
+          Binaries built this way <i>may</i> not be compatible with the Steam version of Half-Life.
+        </p>
+        <p>
+          If this happens, try linking it statically and disabling 64-bit 
+          with the below codeblock as a substitute for the previous command.
+        </p>
+        <p>
+          <code class="codeblock">
+            $ cmake -DCMAKE_BUILD_TYPE=Release \
+                    -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc" \
+                    -B build -S .
+            $ cmake --build
+          </code>
+        </p>
+        </div>
+        <p>
+          Now copy the <code>build/dlls/bot[_arch].so</code> file to your Xash3D/XashDS install.<br>
+        </p>
+        <p> 
+          <code class="codeblock">
+            $ cp build/dlls/bot[_arch].so /path/to/xash/valve/dlls
+          </code>
+        </p>
+        <!-- LOOK AT THIS!!! THERE'S A HEADER HERE!!! BIG WAVY FLASHY COMMENT OVER HERE!!!-->
+        <h2>Configuring</h2>
+        <p>
+          The next part of setting it up is configuring Xash/GoldSrc 
+          to use the new SDK library, and configuring the Bot10 bots.
+        </p>
+        <p>
+          Edit <code>liblist.gam</code>, the <code>gamedll_linux</code> line occurance of <code>hl</code> with <code>bot</code>.
+        </p>
+        <p>
+          <b>Example <code>liblist.gam</code>:</b><br><br>
+          <code class="codeblock">
+            // Valve Game Info file<br>
+            //  These are key/value pairs.  Certain mods will use different settings.<br>
+            //<br>
+            game "Half-Life"<br>
+            startmap "c0a0"<br>
+            trainmap "t0a0"<br>
+            mpentity "info_player_deathmatch"<br>
+            gamedll "dlls\hl.dll"<br>
+            gamedll_linux "dlls/<b>bot</b>.so"<br>
+            gamedll_osx "hl.dylib"<br>
+            secure "1"<br>
+            type "singleplayer_only"<br>
+            animated_title "1"<br>
+            hd_background "1"<br>
+          </code>
+        </p>
+        <div class="window" name="NOTE">
+          <p>
+            Only the value of<code>gamedll_linux</code> if modified as we are using
+            Linux as a dedicated server, otherwise <code>gamedll_osx</code> for macOS.
+          </p>
+          <p>
+            No Windows because since it not only uses Visual Studio but different commands so 
+            I'd have to refactor the entire compiling step.<br><br>
+            Too much of a hassle.
+          </p>
+        </div>
+      <p>
+        After that's done you are going to have to configure the bots.
+      </p>
+      <p>
+        Create a empty/plaintext file named "bot.cfg" in the <code>valve</code> directory,
+        and open it with a text editor of your choice.
+      </p>
+      <p>
+        I'd personally recommend KWrite as
+        it's fast and gets the job done.
+      </p>
+      <p>
+        Make this the contents of the file:
+      </p>
+      <p>
+        <code class="codeblock">
+          botskill [0-4, 0=good, 5=bad]
+          max_bots [number of bots you need, up to 32]
+          # below this line is optional stuff
+          min_bots [number of bots before you start kicking them off]
+          addbot [skin] [name] [skill]
+          botdontshoot [1 or 0, pretty clear as to what this is]
+        </code>
+      </p>
+      <div class="window" name="WARNING">
+        <p>
+          There is a bug that can cause problems with bot skill level 0, 
+          in the file <code>dlls/bot/bot.cpp</code> at line <code>261</code> that incorrectly ranges it from 1-5 instead of 0-4.
+        </p>
+        <p>
+          It can be fixed be changing 1 to 0 and 5 to 4.
+        </p>
+        <p>
+          <b>Patched line <code>261</code>:</b><br><br>
+          <code class="codeblock">
+            if ((skill_level < 0) || (skill_level > 4))
+          </code>
+        </p>
+      </div>
+      <p>
+        These can also be executed in the client <b>BY ANYBODY</b> if you aren't running 
+        a dedicated server, but can also be accessed in the server console using the syntax <code>bot "[bot.cfg command]"</code>
+      </p>
+      <p>
+        After these quick and simple changes, you should be ready to launch a botted server, whether to play with your friends, or to host publicly.
+      </p>
+      <p>
+        If I missed anything, <a href="https://github.com/Buggem/xash3docs/edit/main/bots/index.html">edit this page in a fork on GitHub</a> 
+        and <a href="https://github.com/Buggem/xash3docs/compare">submit a pull request</a> once you're finished.
+      </p>
+    </div>
   </body>
 </html>
