@@ -151,7 +151,7 @@
       </p>
       <p>
         <code class="codeblock">
-          botskill [0-4, 0=good, 5=bad]
+          botskill [1-5, 1=good, 5=bad]
           max_bots [number of bots you need, up to 32]
           # below this line is optional stuff
           min_bots [number of bots before you start kicking them off]
@@ -159,21 +159,6 @@
           botdontshoot [1 or 0, pretty clear as to what this is]
         </code>
       </p>
-      <div class="window" name="WARNING">
-        <p>
-          There is a bug that can cause problems with bot skill level 0, 
-          in the file <code>dlls/bot/bot.cpp</code> at line <code>261</code> that incorrectly ranges it from 1-5 instead of 0-4.
-        </p>
-        <p>
-          It can be fixed be changing 1 to 0 and 5 to 4.
-        </p>
-        <p>
-          <b>Patched line <code>261</code>:</b><br><br>
-          <code class="codeblock">
-            if ((skill_level < 0) || (skill_level > 4))
-          </code>
-        </p>
-      </div>
       <p>
         These can also be executed in the client <b>BY ANYBODY</b> if you aren't running 
         a dedicated server, but can also be accessed in the server console using the syntax <code>bot "[bot.cfg command]"</code>
