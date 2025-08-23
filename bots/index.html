@@ -35,12 +35,11 @@
       <h1>Bots in Xash3D (New Engine)</h1>
       <div class="window" name="WARNING">
         <p>
-          This guide is intended for Linux, as Windows is
-          very bad at dedicated server hosting and compiling
-          binaries.
+          This guide is intended for Linux, as Windows is 
+          hard to compile binaries on.
         </p>
       </div>
-        <p>This is a tutorial on how to enable Half-Life: Deathmatch bots (specifically <i>Bot No. 10 by botman</i>) <b><i>without</i></b> Metamod or any external plugin software.</p>
+        <p>This is a tutorial on how to enable Half-Life: Deathmatch bots (specifically <i>Bot No. 10 by botman</i>) <b><i>without</i></b> any external plugin software (i.e. Metamod).</p>
       <p><i class="testedon">
         <!-- we will implement a class for these "tested on" blurbs. god these HTML comments are ugly aren't they. -->
         Tested on AlmaLinux 9.6 on a Raspberry Pi 5 16GB model.
@@ -56,9 +55,9 @@
       </p>
       <p>
         <code class="codeblock">
-          $ git clone --recursive https://github.com/FWGS/hlsdk-portable<br>
-          $ cd hlsdk-portable<br>
-          $ git checkout bot10
+          git clone --recursive https://github.com/FWGS/hlsdk-portable<br>
+          cd hlsdk-portable<br>
+          git checkout bot10
         </code>
       </p>
       <p>
@@ -67,8 +66,8 @@
       </p>
       <p>
         <code class="codeblock">
-          $ cmake -DCMAKE_BUILD_TYPE=Release <span id="b64secret" style="display: none;">-D64BIT=ON</span> -B build -S .<br>
-          $ cmake --build build<br>
+          cmake -DCMAKE_BUILD_TYPE=Release <span id="b64secret" style="display: none;">-D64BIT=ON</span> -B build -S .<br>
+          cmake --build build<br>
         </code>
       </p>
       <div class="window" name="WARNING">
@@ -76,15 +75,13 @@
           Binaries built this way <i>may</i> not be compatible with the Steam version of Half-Life.
         </p>
         <p>
-          If this happens, try linking <code>libstdc++</code> and <code>libgcc</code> statically and disabling 64-bit 
+          If this happens, try linking <code>libstdc++</code> and <code>libgcc</code> statically and disabling 64-bit
           with the below codeblock as a substitute for the previous command.
         </p>
         <p>
           <code class="codeblock">
-            $ cmake -DCMAKE_BUILD_TYPE=Release \
-                    -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc" \
-                    -B build -S .
-            $ cmake --build
+            cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="${CMAKE_CXX_FLAGS} -static-libstdc++ -static-libgcc" -B build -S .
+            cmake --build
           </code>
         </p>
         </div>
@@ -103,7 +100,9 @@
           to use the new SDK library, and configuring the Bot10 bots.
         </p>
         <p>
-          Edit <code>liblist.gam</code>, the <code>gamedll_linux</code> line occurance of <code>hl</code> with <code>bot</code>.
+          Edit <code>liblist.gam</code>, and add your newly compiled Bot10 DLL by editing the line beginning with
+          <code>gamedll_linux</code>, and removing the default path (likely <code>dlls/hl.so</code>) and appending
+          your new one (most likely <code>dlls/hl.so</code>). 
         </p>
         <p>
           <b>Example <code>liblist.gam</code>:</b><br><br>
